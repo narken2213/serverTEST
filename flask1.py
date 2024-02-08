@@ -23,6 +23,10 @@ def index3():
 def index4():
     with open('templates/index5.html', 'r', encoding='utf-8') as stream:
         return stream.read()
+@app.route('/astronaut_selection')
+def index5():
+    with open('templates/index6.html', 'r', encoding='utf-8') as stream:
+        return stream.read()
 
 
 if __name__ == '__main__':
