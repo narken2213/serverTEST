@@ -19,6 +19,10 @@ def index2():
 def index3():
     with open('templates/index4.html', 'r', encoding='utf-8') as stream:
         return stream.read()
+@app.route('/promotion_image')
+def index4():
+    with open('templates/index5.html', 'r', encoding='utf-8') as stream:
+        return stream.read()
 
 
 if __name__ == '__main__':
