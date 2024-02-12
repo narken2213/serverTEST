@@ -8,6 +8,10 @@ app = Flask(__name__)
 def index(title):
     return render_template('base.html', title=title)
 
+@app.route('/training/<prof>')
+def index1(prof):
+    return render_template('trainig.html', prof=prof)
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=7777)
