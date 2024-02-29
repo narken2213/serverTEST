@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect
 from data import db_session
 from data.users import User
-from data.jobs import Jobs
+from data.jobs import Job
 from forms.user import RegisterForm, LoginForm
 from forms.jobs import JobsForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -19,7 +19,7 @@ def load_user(user_id):
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).all()
+    jobs = db_sess.query(Job).all()
     print(jobs)
     return render_template("index.html", jobs=jobs)
 
@@ -29,7 +29,6 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
-        print(user)
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
@@ -52,15 +51,19 @@ def reqister():
                                    form=form,
                                    message="Такой пользователь уже есть")
         user = User(
+            email=form.email.data,
             name=form.name.data,
             surname=form.surname.data,
-            email=form.email.data,
+            age=form.age.data,
+            position=form.position.data,
+            speciality=form.speciality.data,
+            address=form.address.data,
             #  hashed_password=form.password.data
         )
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
-        return redirect('/')
+        return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
 @app.route('/addjob',  methods=['GET', 'POST'])
@@ -69,12 +72,13 @@ def addjob():
     form = JobsForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        job = Jobs()
+        job = Job()
         job.job = form.title.data
         job.team_leader = form.leader.data
         job.work_size = form.work_size.data
         job.collaborators = form.collaborators.data
-        job.is_finished = form.is_finished.data
+        job.is_finished = form.is_finish.data
+        db_sess.add(job)
         db_sess.commit()
         return redirect('/')
     return render_template('addjob.html', title='Добавление новости',
