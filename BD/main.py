@@ -5,6 +5,7 @@ from data.jobs import Job
 from forms.user import RegisterForm, LoginForm
 from forms.jobs import JobsForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from data import db_session, jobs_api
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -58,7 +59,6 @@ def reqister():
             position=form.position.data,
             speciality=form.speciality.data,
             address=form.address.data,
-            #  hashed_password=form.password.data
         )
         user.set_password(form.password.data)
         db_sess.add(user)
@@ -93,6 +93,7 @@ def logout():
 
 def main():
     db_session.global_init("db/mars_explorer.db")
+    app.register_blueprint(jobs_api.blueprint)
     app.run()
 
 
